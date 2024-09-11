@@ -21,6 +21,34 @@ const cadastrarMeta = async () => {
     })
 }
 
+const listarMetas = async () => {
+    const selecionadas = await checkbox({
+        message: 'Use as setas para mudar a meta selecionada, o espaço para marcar/desmarcar e o enter para finalizar',
+        choices: [...todasMetas],
+        instructions: false
+    })
+
+    if(selecionadas.length == 0) {
+        return
+    }
+
+    todasMetas.forEach((m) => {
+        m.checked = false
+    })
+
+    //forEach = para cada item dentro de selecionadas
+    //find irá procurar uma meta, dentro do array, que seja igual a meta selecionada pelo user
+    //quando encontrar, retornará true e a meta será atribuida a variável
+    
+    selecionadas.forEach((selecionada) => {
+        const meta = todasMetas.find((m) => {
+            return m.value == selecionada
+        })
+        meta.checked = true
+    })
+
+}
+
 const start = async () => {
 
     while(true) {
@@ -46,10 +74,9 @@ const start = async () => {
         switch(opcao) {
             case 'cadastrar':
                 await cadastrarMeta()
-                console.log(todasMetas)
                 break
             case 'listar':
-                console.log('vamos listas')
+                await listarMetas()
                 break
             case 'sair':
                 console.log('ate mais')
