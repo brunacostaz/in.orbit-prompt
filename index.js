@@ -19,6 +19,8 @@ const cadastrarMeta = async () => {
         value: meta,
         checked: false
     })
+
+    return
 }
 
 const listarMetas = async () => {
@@ -48,6 +50,8 @@ const listarMetas = async () => {
 
         meta.checked = true
     })
+
+    return
 }
 
 const metasRealizadas = async () => {
@@ -64,6 +68,8 @@ const metasRealizadas = async () => {
         message: 'Metas realizadas',
         choices: [...realizadas]
     })
+
+    return
 }
 
 const metasAbertas = async () => {
@@ -85,6 +91,8 @@ const metasAbertas = async () => {
         message: 'Metas abertas',
         choices: [...abertas]
     })
+
+    return
 }
 
 const start = async () => {
