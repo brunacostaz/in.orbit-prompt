@@ -1,13 +1,25 @@
 const { select, input, checkbox } = require('@inquirer/prompts')
+const fs = require("fs").promises
 
 let mensagem = 'Bem-vindo ao in.orbit, seu app de Metas!'
 
-let todasMetas = [
-    {
-        value: 'Estudar programação todos os dias',
-        checked: false
+let todasMetas 
+
+const carregarMetas = async () => {
+    try{
+        const dados = await fs.readFile('metas.json', 'utf-8')
+        //parse() converte os dados do JSON para um array (é um array pois criei dessa forma)
+        todasMetas = JSON.parse(dados)
     }
-]
+    catch(erro) {
+        todasMetas = []
+    }
+}
+
+const salvarMetas = async () => {
+    //stringify irá tranformar o array em um formato JSON
+    await fs.writeFile('metas.json', JSON.stringify(todasMetas, null, 2))
+}
 
 const cadastrarMeta = async () => {
     const meta = await input({message: 'Digite uma meta:'})
@@ -27,7 +39,9 @@ const cadastrarMeta = async () => {
 }
 
 const listarMetas = async () => {
+    
     const selecionadas = await checkbox({
+        
         message: 'Minhas Metas - (Use as setas para mudar a meta selecionada, o espaço para marcar/desmarcar e o enter para finalizar)',
         choices: [...todasMetas],
         instructions: false
@@ -60,6 +74,7 @@ const listarMetas = async () => {
 }
 
 const metasRealizadas = async () => {
+
     const realizadas = todasMetas.filter((meta) => {
         return meta.checked
     })
@@ -80,6 +95,7 @@ const metasRealizadas = async () => {
 }
 
 const metasAbertas = async () => {
+
     const abertas = todasMetas.filter((meta) => {
         return !meta.checked
     })
@@ -105,6 +121,7 @@ const metasAbertas = async () => {
 }
 
 const removerMetas = async () => {
+
     //map() percorre cada elemento do array e aplica uma função de tranformação para cada um deles
     // com isso, ela retorna um novo array (feito em cima do antigo)
     const desmarcar = todasMetas.map((meta) => {
@@ -147,9 +164,11 @@ const limparExibir = () => {
 }
 
 const start = async () => {
+    await carregarMetas()
 
     while(true) {
         limparExibir()
+        await salvarMetas()
 
         const opcao = await select({
             message: 'Menu >',
@@ -205,3 +224,8 @@ const start = async () => {
 }
 
 start()
+
+if(listarMetas.length == 0) {
+    mensagem = 'Você ainda não cadastrou suas metas. Não perca tempo, vamos evoluir cada vez mais!'
+    return
+}
