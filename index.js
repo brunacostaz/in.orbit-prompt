@@ -95,6 +95,36 @@ const metasAbertas = async () => {
     return
 }
 
+const removerMetas = async () => {
+    //map() percorre cada elemento do array e aplica uma função de tranformação para cada um deles
+    // com isso, ela retorna um novo array (feito em cima do antigo)
+    const desmarcar = todasMetas.map((meta) => {
+        return {value: meta.value, checked: false}
+    })
+
+    const metasParaDeletar = await checkbox({
+        message: 'Selecione a(s) meta(s) que deseja remover',
+        choices: [...desmarcar],
+        instructions: false
+    })
+
+    if(metasParaDeletar.length == 0) {
+        return
+    }
+
+    metasParaDeletar.forEach((item) => {
+        //filter() retornar um novo array com os filtros estabelecidos 
+        todasMetas = todasMetas.filter((meta) => {
+            //se for diferente do item selecionado para deletar, a resposta é true - dessa forma, filter irá colocar a meta no novo array
+            //se for igual ao item que deve deletar, a resposta é false - nesse caso, filter não irá colocar a meta no novo array
+            //como está sendo substituido no próprio array de todasMetas, todo item que o filter não adicionar ao novo array não existirá mais, ou seja, será removido
+            return meta.value != item
+        })
+    })
+    
+    return
+}
+
 const start = async () => {
 
     while(true) {
@@ -119,6 +149,10 @@ const start = async () => {
                     value: 'abertas'
                 },
                 {
+                    name: 'Remover metas',
+                    value: 'remover'
+                },
+                {
                     name: 'Sair',
                     value: 'sair'
                 }
@@ -137,6 +171,9 @@ const start = async () => {
                 break
             case 'abertas':
                 await metasAbertas()
+                break
+            case 'remover':
+                await removerMetas()
                 break
             case 'sair':
                 console.log('Até a próxima!')
