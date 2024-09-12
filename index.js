@@ -65,7 +65,7 @@ const metasRealizadas = async () => {
     }
 
     await select({
-        message: 'Metas realizadas',
+        message: `Metas realizadas -> ${realizadas.length}`,
         choices: [...realizadas]
     })
 
@@ -88,7 +88,7 @@ const metasAbertas = async () => {
     }
 
     await select({
-        message: 'Metas abertas',
+        message: `Metas abertas -> ${abertas.length}`,
         choices: [...abertas]
     })
 
