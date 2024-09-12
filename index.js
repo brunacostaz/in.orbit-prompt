@@ -28,13 +28,14 @@ const listarMetas = async () => {
         instructions: false
     })
 
+    todasMetas.forEach((m) => {
+        m.checked = false
+    })
+
     if(selecionadas.length == 0) {
         return
     }
 
-    todasMetas.forEach((m) => {
-        m.checked = false
-    })
 
     //forEach = para cada item dentro de selecionadas
     //find irá procurar uma meta, dentro do array, que seja igual a meta selecionada pelo user
@@ -47,7 +48,6 @@ const listarMetas = async () => {
 
         meta.checked = true
     })
-
 }
 
 const metasRealizadas = async () => {
@@ -102,11 +102,12 @@ const start = async () => {
             case 'realizadas':
                 await metasRealizadas()
                 break
-            case 'sair':
-                console.log('Até a próxima!')
-                return
+                case 'sair':
+                    console.log('Até a próxima!')
+                    return
+                }
+            }
         }
-    }
-}
-
+        
+        
 start()
