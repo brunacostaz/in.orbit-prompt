@@ -66,6 +66,27 @@ const metasRealizadas = async () => {
     })
 }
 
+const metasAbertas = async () => {
+    const abertas = todasMetas.filter((meta) => {
+        return meta.checked == false
+    })
+
+    if(abertas.length == 0) {
+        if(todasMetas == 0) {
+            console.log('Você ainda não cadastrou suas metas. Não perca tempo, vamos evoluir cada vez mais!')
+        } else {
+            console.log('Parabéns!! Você concluiu todas as suas metas :)')
+            console.log('Aproveite para organizar as próximas, vamos evoluir cada vez mais')
+        }
+        return
+    }
+
+    await select({
+        message: 'Metas abertas',
+        choices: [...abertas]
+    })
+}
+
 const start = async () => {
 
     while(true) {
@@ -86,6 +107,10 @@ const start = async () => {
                     value: 'realizadas'
                 },
                 {
+                    name: 'Metas abertas',
+                    value: 'abertas'
+                },
+                {
                     name: 'Sair',
                     value: 'sair'
                 }
@@ -102,12 +127,14 @@ const start = async () => {
             case 'realizadas':
                 await metasRealizadas()
                 break
-                case 'sair':
-                    console.log('Até a próxima!')
-                    return
-                }
-            }
+            case 'abertas':
+                await metasAbertas()
+                break
+            case 'sair':
+                console.log('Até a próxima!')
+                return
         }
-        
-        
+    }
+}
+
 start()
