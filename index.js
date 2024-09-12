@@ -1,5 +1,7 @@
 const { select, input, checkbox } = require('@inquirer/prompts')
 
+let mensagem = 'Bem-vindo ao in.orbit, seu app de Metas!'
+
 let todasMetas = [
     {
         value: 'Estudar programação todos os dias',
@@ -11,7 +13,7 @@ const cadastrarMeta = async () => {
     const meta = await input({message: 'Digite uma meta:'})
 
     if(meta.length == 0) {
-        console.log('Nenhuma meta foi cadastrada!')
+        mensagem = 'Nenhuma meta foi cadastrada!'
         return
     }
 
@@ -20,12 +22,13 @@ const cadastrarMeta = async () => {
         checked: false
     })
 
+    mensagem = 'Meta cadastrada com sucesso!'
     return
 }
 
 const listarMetas = async () => {
     const selecionadas = await checkbox({
-        message: 'Use as setas para mudar a meta selecionada, o espaço para marcar/desmarcar e o enter para finalizar',
+        message: 'Minhas Metas - (Use as setas para mudar a meta selecionada, o espaço para marcar/desmarcar e o enter para finalizar)',
         choices: [...todasMetas],
         instructions: false
     })
@@ -35,6 +38,7 @@ const listarMetas = async () => {
     })
 
     if(selecionadas.length == 0) {
+        mensagem = 'Nenhuma meta foi selecionada.'
         return
     }
 
@@ -51,6 +55,7 @@ const listarMetas = async () => {
         meta.checked = true
     })
 
+    mensagem = selecionadas.length > 1 ? 'Metas concluídas com sucesso! Parabéns!' : 'Meta concluída com sucesso! Parabéns!'
     return
 }
 
@@ -60,15 +65,17 @@ const metasRealizadas = async () => {
     })
     
     if(realizadas.length == 0) {
-        console.log('No momento, não há metas realizadas :(')
+        mensagem = 'No momento, não há metas realizadas :('
         return
     }
 
     await select({
-        message: `Metas realizadas -> ${realizadas.length}`,
+        message: 'Metas realizadas',
         choices: [...realizadas]
     })
 
+    mensagem = `${realizadas.length} `
+    mensagem += realizadas.length > 1 ? `metas realizadas no total.` : `meta realizada no total.`
     return
 }
 
@@ -79,19 +86,21 @@ const metasAbertas = async () => {
 
     if(abertas.length == 0) {
         if(todasMetas == 0) {
-            console.log('Você ainda não cadastrou suas metas. Não perca tempo, vamos evoluir cada vez mais!')
+            mensagem = 'Você ainda não cadastrou suas metas. Não perca tempo, vamos evoluir cada vez mais!'
         } else {
-            console.log('Parabéns!! Você concluiu todas as suas metas :)')
-            console.log('Aproveite para organizar as próximas, vamos evoluir cada vez mais')
+            mensagem = 'Parabéns!! Você concluiu todas as suas metas :)'
+            mensagem += ' Aproveite para organizar as próximas, vamos evoluir cada vez mais.'
         }
         return
     }
 
     await select({
-        message: `Metas abertas -> ${abertas.length}`,
+        message: 'Metas abertas',
         choices: [...abertas]
     })
 
+    mensagem = `${abertas.length} `
+    mensagem += abertas.length > 1 ? `metas abertas no total.` : `meta aberta no total.`
     return
 }
 
@@ -103,12 +112,13 @@ const removerMetas = async () => {
     })
 
     const metasParaDeletar = await checkbox({
-        message: 'Selecione a(s) meta(s) que deseja remover',
+        message: 'Selecione a(s) meta(s) que deseja remover:',
         choices: [...desmarcar],
         instructions: false
     })
 
     if(metasParaDeletar.length == 0) {
+        mensagem = 'Nenhuma meta foi removida.'
         return
     }
 
@@ -121,13 +131,25 @@ const removerMetas = async () => {
             return meta.value != item
         })
     })
-    
+
+    mensagem = metasParaDeletar.length > 1 ? 'Metas removidas com sucesso!' : 'Meta removida com sucesso!'
     return
+}
+
+const limparExibir = () => {
+    console.clear()
+
+    if(mensagem != '') {
+        console.log(mensagem)
+        console.log('')
+        mensagem = ''
+    }
 }
 
 const start = async () => {
 
     while(true) {
+        limparExibir()
 
         const opcao = await select({
             message: 'Menu >',
@@ -137,7 +159,7 @@ const start = async () => {
                     value: 'cadastrar'
                 },
                 {
-                    name: 'Listar metas',
+                    name: 'Minhas metas',
                     value: 'listar'
                 },
                 {
