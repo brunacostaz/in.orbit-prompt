@@ -68,7 +68,7 @@ const metasRealizadas = async () => {
 
 const metasAbertas = async () => {
     const abertas = todasMetas.filter((meta) => {
-        return meta.checked == false
+        return !meta.checked
     })
 
     if(abertas.length == 0) {
