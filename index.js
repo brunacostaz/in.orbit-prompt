@@ -224,8 +224,3 @@ const start = async () => {
 }
 
 start()
-
-if(listarMetas.length == 0) {
-    mensagem = 'Você ainda não cadastrou suas metas. Não perca tempo, vamos evoluir cada vez mais!'
-    return
-}
